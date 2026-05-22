@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Shop_P41
 {
     public class Program
@@ -5,9 +7,13 @@ namespace Shop_P41
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<ShopContext>(options =>
+            {
+                options.UseSqlServer(@"");
+            });
             var app = builder.Build();
 
-            app.MapGet("/", () => "Hello World!");
+            
 
             app.Run();
         }

@@ -16,6 +16,11 @@ public class ShopContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Review>()
-            .HasIndex(r => new {r.})
+            .HasIndex(r => new { r.UserId, r.ProductId })
+            .IsUnique();
+        modelBuilder.Entity<Product>()
+            .Property(p => p.Price)
+            .HasPrecision(10, 2);
+
     }
 }
