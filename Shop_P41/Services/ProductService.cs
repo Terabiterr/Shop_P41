@@ -41,16 +41,33 @@ public class ProductService : IProductService
         throw new Exception("Error delete product");
     }
 
-    public Task<Product> GetProductByIdAsync(int id)
+    public async Task<Product> GetProductByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var product = await _context.Products.FindAsync(id);
+        if(product != null)
+        {
+            return product;
+        }
+        throw new Exception("Product not found");
     }
 
     public async Task<IEnumerable<Product>> GetProductsAsync()
         => await _context.Products.ToListAsync();
 
-    public Task<Product> UpdateAsync(int id, Product product)
+    public async Task<Product> UpdateAsync(int id, Product product)
     {
-        throw new NotImplementedException();
+        var existingProduct = await _context.Products.FindAsync(id);
+        if(existingProduct != null)
+        {
+            existingProduct.Name = product.Name;
+            existingProduct.Price = product.Price;
+            existingProduct.Description = product.Description;
+            existingProduct.Quantity = product.Quantity;
+            existingProduct.CategoryId = product.CategoryId;
+            _context.Products.Update(existingProduct);
+            await _context.SaveChangesAsync();
+            return existingProduct;
+        }
+        throw new Exception("Error update product");
     }
 }
