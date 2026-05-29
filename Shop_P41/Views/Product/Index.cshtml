@@ -4,7 +4,7 @@
     ViewData["Title"] = "Product List";
     Layout = "_Layout";
 }
-
+<a class="btn btn-success" href="@Url.Action("Create", "Product")">Create</a>
 <table class="table table-info">
         <thead>
         <tr>
@@ -30,7 +30,6 @@
                 <td>
                     <a class="btn btn-primary" href="@Url.Action("Edit", "Product", new { id = product.Id })">Edit</a>
                     <a class="btn btn-danger" href="@Url.Action("Delete", "Product", new { id = product.Id })">Delete</a>
-                    <a class="btn btn-success" href="@Url.Action("Create", "Product")">Create</a>
                     <a class="btn btn-info" href="@Url.Action("Details", "Product", new { id = product.Id })">Details</a>
                 </td>                     
             </tr>

@@ -17,6 +17,7 @@ namespace Shop_P41.Controllers
             return View(products);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var product = await _productService.GetProductByIdAsync(id);
