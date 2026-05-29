@@ -12,11 +12,6 @@ namespace Shop_P41
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             var app = builder.Build();
 
-            //Продовжити писати реалізацію моделей та робити міграції
-            app.MapGet("/", () =>
-            {
-
-            });
             app.Run();
         }
     }
