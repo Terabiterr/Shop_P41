@@ -1,44 +1,70 @@
-﻿namespace Shop_P41.Services
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Shop_P41.Services
 {
     public interface ICategoryService
     {
-        public IEnumerable<Category> GetCategories();
-        public Category CreateCategory(Category category);
-        public Category GetCategoryById(int id);
-        public Category Update(int id, Category category);
-        public Category Delete(int id);
+        public Task<IEnumerable<Category>> GetAllAsync();
+        public Task<Category> CreateAsync(Category category);
+        public Task<Category> GetByIdAsync(int id);
+        public Task<Category> UpdateAsync(int id, Category category);
+        public Task<Category> DeleteAsync(int id);
 
     }
     public class CategoryService : ICategoryService
     {
-        public Category CreateCategory(Category category)
+        private readonly ShopContext _context;
+        public CategoryService(ShopContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Category Delete(int id)
+        public async Task<Category> CreateAsync(Category category)
         {
-            throw new NotImplementedException();
+            if(category != null)
+            {
+                _context.Categories.Add(category);
+                await _context.SaveChangesAsync();
+                return category;
+            }
+            throw new Exception("Category is null");
         }
 
-        public IEnumerable<Category> GetCategories()
+        public async Task<Category> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var category = await _context.Categories.FindAsync(id);
+            if(category != null)
+            {
+                _context.Categories.Remove(category);
+                await _context.SaveChangesAsync();
+                return category;
+            }
+            throw new Exception("Category not found");
         }
 
-        public Category GetCategoryById(int id)
+        public async Task<IEnumerable<Category>> GetAllAsync()
+            => await _context.Categories.ToListAsync();
+
+        public async Task<Category> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var category = await _context.Categories.FindAsync(id);
+            if (category != null)
+            {
+                return category;
+            }
+            throw new Exception("Category not found ...");
         }
 
-        public string GetCategoryName(string categoryName)
+        public async Task<Category> UpdateAsync(int id, Category category)
         {
-            throw new NotImplementedException();
-        }
-
-        public Category Update(int id, Category category)
-        {
-            throw new NotImplementedException();
+            var category_for_update = await _context.Categories.FindAsync(id);
+            if (category_for_update != null)
+            {
+                category_for_update.Name = category.Name;
+                await _context.SaveChangesAsync();
+                return category_for_update;
+            }
+            throw new Exception("Category not found ...");
         }
     }
 }
