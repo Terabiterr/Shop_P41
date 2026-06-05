@@ -11,7 +11,7 @@ namespace Shop_P41.Controllers
             _categoryService = categoryService;
         }
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Read()
         {
             var categories = await _categoryService.GetAllAsync();
             return View(categories);
@@ -30,7 +30,7 @@ namespace Shop_P41.Controllers
                 if (ModelState.IsValid)
                 {
                     await _categoryService.CreateAsync(category);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Read");
                 } 
                 else
                 {
@@ -42,7 +42,7 @@ namespace Shop_P41.Controllers
                 //Add logs
                 Console.WriteLine(ex.Message);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Read");
         }
         [HttpGet]
         public IActionResult Update()
@@ -57,7 +57,7 @@ namespace Shop_P41.Controllers
                 if (ModelState.IsValid)
                 {
                     await _categoryService.UpdateAsync(id, category);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Read");
                 }
                 else
                 {
@@ -69,27 +69,29 @@ namespace Shop_P41.Controllers
                 //Add logs
                 Console.WriteLine(ex.Message);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Read");
         }
-        [HttpGet]
-        public IActionResult Delete()
+        [HttpGet("{id}")]
+        public IActionResult Delete(int id)
         {
-            return View();
+            Console.WriteLine($"GET Id: {id}");
+            return View(id);
         }
         [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeletePost(int id)
         {
+            Console.WriteLine($"POST Id: {id}");
             try
             {
                 await _categoryService.DeleteAsync(id);
-                return RedirectToAction("Index");
+                return RedirectToAction("Read");
             }
             catch (Exception ex)
             {
                 //Add logs
                 Console.WriteLine(ex.Message);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Read");
         }
     }
 }
