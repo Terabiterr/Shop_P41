@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Shop_P41.Services;
 
 
 namespace Shop_P41
@@ -10,6 +11,7 @@ namespace Shop_P41
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDbContext<ShopContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddControllersWithViews();
 
