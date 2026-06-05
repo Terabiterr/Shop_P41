@@ -10,20 +10,39 @@ namespace Shop_P41.Controllers
         {
             _categoryService = categoryService;
         }
-
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var categories = await _categoryService.GetAllAsync();
+            return View(categories);
         }
         [HttpGet]
         public IActionResult Create()
         {
+
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Category category)
+        public async Task<IActionResult> Create(Category category)
         {
-            return View(category);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _categoryService.CreateAsync(category);
+                    return RedirectToAction("Index");
+                } 
+                else
+                {
+                    throw new Exception("Model not valid!!!");
+                }
+            }
+            catch (Exception ex)
+            {
+                //Add logs
+                Console.WriteLine(ex.Message);
+            }
+            return RedirectToAction("Index");
         }
         [HttpGet]
         public IActionResult Update()
@@ -31,9 +50,26 @@ namespace Shop_P41.Controllers
             return View();
         }
         [HttpPost("{id}")]
-        public IActionResult Update(int id, Category category)
+        public async Task<IActionResult> Update(int id, Category category)
         {
-            return View(category);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _categoryService.UpdateAsync(id, category);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    throw new Exception("Model not valid!!!");
+                }
+            }
+            catch (Exception ex)
+            {
+                //Add logs
+                Console.WriteLine(ex.Message);
+            }
+            return RedirectToAction("Index");
         }
         [HttpGet]
         public IActionResult Delete()
@@ -41,9 +77,19 @@ namespace Shop_P41.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            try
+            {
+                await _categoryService.DeleteAsync(id);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                //Add logs
+                Console.WriteLine(ex.Message);
+            }
+            return RedirectToAction("Index");
         }
     }
 }
