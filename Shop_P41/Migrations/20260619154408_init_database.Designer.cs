@@ -10,15 +10,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Shop_P41.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20260529140300_AddPropertiesInCategory")]
-    partial class AddPropertiesInCategory
+    [Migration("20260619154408_init_database")]
+    partial class init_database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.8")
+                .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -146,7 +146,12 @@ namespace Shop_P41.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ProductId")
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -228,9 +233,13 @@ namespace Shop_P41.Migrations
 
             modelBuilder.Entity("ProductImage", b =>
                 {
-                    b.HasOne("Product", null)
+                    b.HasOne("Product", "Product")
                         .WithMany("ProductImages")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Review", b =>

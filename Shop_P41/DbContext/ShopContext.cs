@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+
+using Microsoft.EntityFrameworkCore;
 
 public class ShopContext : DbContext
 {
@@ -6,7 +8,7 @@ public class ShopContext : DbContext
     {
     }
     public DbSet<Product> Products => Set<Product>();
-    public DbSet<CartItem> CartItems => Set<CartItem>();
+    public Microsoft.EntityFrameworkCore.DbSet<CartItem> CartItems => Set<CartItem>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<Cart> Carts => Set<Cart>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();

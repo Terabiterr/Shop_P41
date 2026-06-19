@@ -5,7 +5,7 @@
     ViewData["Title"] = "Category Create";
     Layout = "_Layout";
 }
-
+<a class="btn btn-info" href="@Url.Action("Read", "Category")">Category List</a>
 <form class="form-control" asp-action="Create" asp-controller="Category" method="post">
     <label asp-for="Name">Name</label>
     <input class="form-control" asp-for="Name" type="text" placeholder="name" />
