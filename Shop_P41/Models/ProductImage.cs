@@ -15,4 +15,10 @@ public class ProductImage
 
     [ForeignKey(nameof(ProductId))]
     public Product Product { get; set; } = null!;
+
+    /*
+     Додати зображення до бази даних, та вивести товари через контроллер Product
+    в views в таблиці повинні відображатися зображення
+    Додати сервіс CRUD для картинок
+     */
 }
