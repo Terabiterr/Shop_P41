@@ -10,13 +10,11 @@ namespace Shop_P41.Controllers
         {
             _categoryService = categoryService;
         }
-        [HttpGet]
         public async Task<IActionResult> Read()
         {
             var categories = await _categoryService.GetAllAsync();
             return View(categories);
         }
-        [HttpGet]
         public IActionResult Create()
         {
 
@@ -44,43 +42,37 @@ namespace Shop_P41.Controllers
             }
             return RedirectToAction("Read");
         }
-        [HttpGet]
-        public IActionResult Update()
+        public async Task<IActionResult> Update(int id)
         {
-            return View();
+            var category = await _categoryService.GetByIdAsync(id);
+            return View(category);
         }
-        [HttpPost("{id}")]
-        public async Task<IActionResult> Update(int id, Category category)
+        [HttpPost]
+        public async Task<IActionResult> Update(Category category)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    await _categoryService.UpdateAsync(id, category);
+                    await _categoryService.UpdateAsync(category.Id, category);
                     return RedirectToAction("Read");
                 }
-                else
-                {
-                    throw new Exception("Model not valid!!!");
-                }
+                return View(category);
             }
             catch (Exception ex)
             {
                 //Add logs
                 Console.WriteLine(ex.Message);
             }
-            return RedirectToAction("Read");
+            return View(category);
         }
-        [HttpGet("{id}")]
         public IActionResult Delete(int id)
         {
-            Console.WriteLine($"GET Id: {id}");
             return View(id);
         }
         [HttpPost]
         public async Task<IActionResult> DeletePost(int id)
         {
-            Console.WriteLine($"POST Id: {id}");
             try
             {
                 await _categoryService.DeleteAsync(id);

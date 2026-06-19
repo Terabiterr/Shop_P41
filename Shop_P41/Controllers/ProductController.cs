@@ -17,7 +17,6 @@ namespace Shop_P41.Controllers
             return View(products);
         }
 
-        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var product = await _productService.GetProductByIdAsync(id);
@@ -38,6 +37,32 @@ namespace Shop_P41.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
+        }
+        public async Task<IActionResult> Edit(int id)
+        {
+            var product = await _productService.GetProductByIdAsync(id);
+            return View(product);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(Product product)
+        {
+            if(ModelState.IsValid)
+            {
+                _ = await _productService.UpdateAsync(product.Id, product);
+                return RedirectToAction($"{nameof(Index)}");
+            }
+            return View(product);
+        }
+        public async Task<IActionResult> Delete(int id)
+        {
+            var product = await _productService.GetProductByIdAsync(id);
+            return View(product);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            _ = await _productService.DeleteAsync(id);
+            return RedirectToAction($"{nameof(Index)}");
         }
     }
 }
