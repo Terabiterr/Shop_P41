@@ -1,8 +1,7 @@
-﻿
-
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class ShopContext : DbContext
+public class ShopContext : IdentityDbContext<User>
 {
     public ShopContext(DbContextOptions<ShopContext> options) : base(options)
     {
@@ -23,6 +22,31 @@ public class ShopContext : DbContext
         modelBuilder.Entity<Product>()
             .Property(p => p.Price)
             .HasPrecision(10, 2);
+
+        // 1-1 User -> Cart
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Cart)
+            .WithOne(c => c.User)
+            .HasForeignKey<Cart>(c => c.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Unique review per user per product
+        modelBuilder.Entity<Review>()
+            .HasIndex(r => new { r.UserId, r.ProductId })
+            .IsUnique();
+
+        // Decimal precision (додатковий захист)
+        modelBuilder.Entity<Product>()
+            .Property(p => p.Price)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<OrderItem>()
+            .Property(o => o.Price)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.TotalPrice)
+            .HasPrecision(18, 2);
 
     }
 }

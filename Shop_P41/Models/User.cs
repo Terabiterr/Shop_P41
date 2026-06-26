@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class User
+public class User : IdentityUser
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    //One user to many orders
+    public ICollection<Order>? Orders { get; set; }
+    //One user to one Cart
+    public Cart? Cart { get; set; }
+    //One User to many Reviews
+    public ICollection<Review>? Reviews { get; set; }
 }
