@@ -6,16 +6,18 @@ public class ShopContext : IdentityDbContext<User>
     public ShopContext(DbContextOptions<ShopContext> options) : base(options)
     {
     }
-    public DbSet<Product> Products => Set<Product>();
-    public Microsoft.EntityFrameworkCore.DbSet<CartItem> CartItems => Set<CartItem>();
-    public DbSet<Order> Orders => Set<Order>();
-    public DbSet<Cart> Carts => Set<Cart>();
-    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
-    public DbSet<Review> Reviews => Set<Review>();
-    public DbSet<ProductImage> ProductImages => Set<ProductImage>();
-    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Product> Products { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+    public DbSet<ProductImage> ProductImages { get; set; }
+    public DbSet<Category> Categories { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Review>()
             .HasIndex(r => new { r.UserId, r.ProductId })
             .IsUnique();
