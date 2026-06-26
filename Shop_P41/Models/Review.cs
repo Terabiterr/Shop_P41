@@ -14,7 +14,7 @@ public class Review
     [Required]
     public int ProductId { get; set; }
     [Required]
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     [ForeignKey(nameof(ProductId))]
     public Product? Product { get; set; }
     [ForeignKey(nameof(UserId))]
