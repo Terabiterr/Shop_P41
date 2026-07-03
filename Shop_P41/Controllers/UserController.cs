@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Shop_P41.Models;
 
 namespace Shop_P41.Controllers
 {
@@ -11,43 +12,26 @@ namespace Shop_P41.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Register()
         {
             return View();
         }
         // POST: http://localhost:[port]/user/register
-        // Метод дії для обробки реєстрації користувача
-        [HttpPost] 
-        public async Task<IActionResult> Register(string email, string password)
+        [HttpPost]
+        public async Task<IActionResult> Register(ModelRegister model)
         {
-            // Перевірка на наявність email та пароля
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if(ModelState.IsValid)
             {
-                return BadRequest("Email або password are important ..."); // Повертає помилку, якщо дані не заповнені
+                var newUser = new User
+                {
+                    UserName = model.Username,
+                    Email = model.Email,
+                    EmailConfirmed = true
+                };
+                await _userManager.CreateAsync(newUser, model.Password);
+                return Ok($"User: {model.Username} is registered succesfully ...");
             }
-
-            // Створення нового користувача
-            var user = new IdentityUser
-            {
-                UserName = email, // Встановлення імені користувача
-                Email = email, // Встановлення email
-                EmailConfirmed = true // Підтвердження email
-            };
-
-            // Створення користувача за допомогою UserManager
-            var result = await _userManager.CreateAsync(user, password);
-            if (result.Succeeded) // Якщо реєстрація пройшла успішно
-            {
-                return Ok("User is registered ..."); // Повертає повідомлення про успішну реєстрацію
-            }
-
-            // Висновок помилок, якщо реєстрація не вдалася
-            foreach (var item in result.Errors)
-            {
-                Console.WriteLine(item); // Налагоджувальне повідомлення
-            }
-            return BadRequest(Json(result.Errors)); // Повертає помилки валідації
+            return BadRequest($"error count: {ModelState.ErrorCount}");
         }
-
     }
 }
