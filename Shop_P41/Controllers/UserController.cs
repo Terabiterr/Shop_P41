@@ -7,9 +7,11 @@ namespace Shop_P41.Controllers
     public class UserController : Controller
     {
         private readonly UserManager<User> _userManager;
-        public UserController(UserManager<User> userManager)
+        private readonly SignInManager<User> _signInManager;
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Register()
@@ -32,6 +34,44 @@ namespace Shop_P41.Controllers
                 return Ok($"User: {model.Username} is registered succesfully ...");
             }
             return BadRequest($"error count: {ModelState.ErrorCount}");
+        }
+        public IActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Login(ModelLogin model)
+        {
+            if (ModelState.IsValid)
+            {
+                // 1. Ищем пользователя в таблице по Email
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    var result = await _signInManager.PasswordSignInAsync(
+                        user.UserName!,
+                        model.Password,
+                        isPersistent: true,
+                        lockoutOnFailure: false
+                    );
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Product");
+                    }
+                }
+
+                return BadRequest("Error: Invalid login attempt.");
+            }
+
+            return BadRequest($"error count: {ModelState.ErrorCount}");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Product");
         }
     }
 }

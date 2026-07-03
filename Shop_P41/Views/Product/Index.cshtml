@@ -6,7 +6,17 @@
 }
 <a class="btn btn-success" href="@Url.Action("Create", "Product")">Create</a>
 <a class="btn btn-info" href="@Url.Action("Read", "Category")">Category List</a>
-<a class="btn btn-dark" href="@Url.Action("Register", "User")">Ragister</a>
+@if(!User.Identity.IsAuthenticated)
+{
+    <a class="btn btn-danger" href="@Url.Action("Register", "User")">Ragister</a>
+    <a class="btn btn-primary" href="@Url.Action("Login", "User")">Login</a>
+}
+else
+{
+    <a class="btn btn-dark" href="@Url.Action("Logout", "User")">Logout</a>
+    <h2>@User.Identity.Name</h2>
+}
+
 <table class="table table-info">
         <thead>
         <tr>
