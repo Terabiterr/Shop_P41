@@ -14,6 +14,8 @@
 else
 {
     <a class="btn btn-dark" href="@Url.Action("Logout", "User")">Logout</a>
+    <a class="btn btn-info" href="@Url.Action("Create", "Role")">CreateRole</a>
+    <a class="btn btn-success" href="@Url.Action("Assign", "Role")">AssignRole</a>
     <h2>@User.Identity.Name</h2>
 }
 
