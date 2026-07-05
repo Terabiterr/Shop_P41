@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Shop_P41.Controllers
 {
@@ -16,7 +17,7 @@ namespace Shop_P41.Controllers
             var products = await _productService.GetProductsAsync();
             return View(products);
         }
-
+        [Authorize(Roles = "Moderator")]
         public async Task<IActionResult> Details(int id)
         {
             var product = await _productService.GetProductByIdAsync(id);

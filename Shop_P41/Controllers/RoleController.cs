@@ -7,13 +7,13 @@ namespace Shop_P41.Controllers
     public class RoleController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+        private readonly UserManager<User> _userManager;
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
         }
-
+            
         public IActionResult Create() 
         {
             return View();
@@ -37,14 +37,14 @@ namespace Shop_P41.Controllers
                 return BadRequest(result.Errors);
             }
         }
-        public IActionResult Assing()
+        public IActionResult Assign()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Assing(string UserId, string RoleId)
+        public async Task<IActionResult> Assign(string UserId, string RoleId)
         {
-            if(string.IsNullOrEmpty(UserId) || string.IsNullOrEmpty(RoleId))
+            if(!string.IsNullOrEmpty(UserId) || !string.IsNullOrEmpty(RoleId))
             {
                 var user = await _userManager.FindByIdAsync(UserId);
                 if (user == null)
@@ -59,11 +59,11 @@ namespace Shop_P41.Controllers
                 var result = await _userManager.AddToRoleAsync(user, role_exists.Name);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Product");
                 }
                 return BadRequest(result.Errors);
             }
-            return BadRequest();
+            return BadRequest("Error model state ...");
         }
     }
 }
