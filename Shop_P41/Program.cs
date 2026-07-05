@@ -32,6 +32,19 @@ namespace Shop_P41
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ShopContext>();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = "ShopApp.Auth";
+                options.ExpireTimeSpan = TimeSpan.FromHours(2);
+                options.SlidingExpiration = true;
+
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/Denied";
+            });
 
             builder.Services.AddControllersWithViews();
 
