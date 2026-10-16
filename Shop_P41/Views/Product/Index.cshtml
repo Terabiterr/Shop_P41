@@ -28,6 +28,7 @@ else
             <th>Description</th>
             <th>Quantity</th>
             <th>Category</th>
+            <th>Image</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -41,10 +42,12 @@ else
                 <td>@product.Description</td>
                 <td>@product.Quantity</td>
                 <td>@product.CategoryId</td>
+                <td>Here will be image ...</td>
                 <td>
                     <a class="btn btn-primary" href="@Url.Action("Edit", "Product", new { id = product.Id })">Edit</a>
                     <a class="btn btn-danger" href="@Url.Action("Delete", "Product", new { id = product.Id })">Delete</a>
                     <a class="btn btn-info" href="@Url.Action("Details", "Product", new { id = product.Id })">Details</a>
+                    <a class="btn btn-success" href="@Url.Action("Image", "Product")">Add Image</a>
                 </td>                     
             </tr>
         }

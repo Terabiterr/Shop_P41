@@ -12,6 +12,27 @@ namespace Shop_P41.Controllers
             _productService = productService;
         }
 
+        //GET METHOD ADD IMAGE TO PRODUCT
+        [Authorize(Roles="Moderator")]
+        public async Task<IActionResult> Image() => View();
+
+        //POST METHOD ADD IMAGE TO PRODUCT
+        [HttpPost]
+        public async Task<IActionResult> Image(ProductImage  productImage)
+        {
+            Console.WriteLine($"Id: {productImage.Id}, Image url: {productImage.ImageUrl}, ProductId: {productImage.ProductId}");
+            if (ModelState.IsValid)
+            {
+                //Додати до сервісу ProductService
+                //method: AddImage(productImage)
+                //Домашнє завдання:
+                //Знайти помилку чому не додається фото до бази даних, та додати ще функціонал редагування та видалення фото
+                await _productService.AddImage(productImage);
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
+
         public async Task<IActionResult> Index()
         {
             var products = await _productService.GetProductsAsync();

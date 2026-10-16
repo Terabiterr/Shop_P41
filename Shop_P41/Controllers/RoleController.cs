@@ -30,7 +30,7 @@ namespace Shop_P41.Controllers
             var result = await _roleManager.CreateAsync(newRole);
             if (result.Succeeded)
             {
-                return RedirectToAction("Assing", "Role");
+                return RedirectToAction("Assign", "Role");
             }
             else
             {

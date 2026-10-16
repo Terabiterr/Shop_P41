@@ -9,7 +9,7 @@ public class ProductImage
     [Required]
     [MaxLength(500)]
     public string ImageUrl { get; set; } = null!;
-
+    //"img/1.jpeg"
     [Required]
     public int ProductId { get; set; }
 
