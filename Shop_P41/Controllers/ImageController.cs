@@ -17,10 +17,14 @@ namespace Shop_P41.Controllers
             return View(images);
         }
         [HttpGet]
-        public IActionResult Insert() => View();
+        public IActionResult Insert() => View(new ProductImage { ImageUrl= "Default ImageUrl", ProductId=0 });
         [HttpPost]
         public async Task<IActionResult> Insert(ProductImage productImage)
         {
+            Console.WriteLine($"ProductImage:\n" +
+                $"Id: {productImage.Id}\n" +
+                $"ImageUrl: {productImage.ImageUrl}\n" +
+                $"ProductId: {productImage.ProductId}");
             if (ModelState.IsValid)
             {
                 await _imageService.InsertImageAsync(productImage);
