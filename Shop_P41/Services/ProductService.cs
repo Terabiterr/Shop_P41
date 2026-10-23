@@ -142,7 +142,7 @@ public class ProductService : IProductService
     }
 
     public async Task<IEnumerable<Product>> GetProductsAsync()
-        => await _context.Products.ToListAsync();
+        => await _context.Products.Include("ProductImages").ToListAsync();
 
     public async Task<Product> UpdateAsync(int id, Product product)
     {

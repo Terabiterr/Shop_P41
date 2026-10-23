@@ -4,6 +4,7 @@
     ViewData["Title"] = "ProductImage List";
     Layout = "_Layout";
 }
+<link rel="stylesheet" href="~/css/image.css">
 <a class="btn btn-success" href="@Url.Action("Index", "Product")">Main Products</a>
 @if (!User.Identity.IsAuthenticated)
 {
@@ -17,6 +18,8 @@ else
 
 @foreach(var image in Model)
 {
-    <p>@image.ImageUrl</p>
-    <p>@image.ProductId</p>
+    <div>
+        <p class="ProductIdImage">ProductId: @image.ProductId</p><hr />
+        <img src="~/img/@image.ImageUrl" width="300" alt="Product Image" />
+    </div>
 }

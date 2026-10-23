@@ -45,7 +45,18 @@ else
                 <td>@product.Description</td>
                 <td>@product.Quantity</td>
                 <td>@product.CategoryId</td>
-                <td>Here will be image ...</td>
+                <td>
+                    @if (product.ProductImages != null)
+                    {
+                        @foreach (var image in product.ProductImages)
+                        {
+                            <div>
+                                <span>Picture!!!</span>
+                                <img src="~/img/@image.ImageUrl" width="300" alt="Product Image" />
+                            </div>
+                        }
+                    }
+                </td>
                 <td>
                     <a class="btn btn-primary" href="@Url.Action("Edit", "Product", new { id = product.Id })">Edit</a>
                     <a class="btn btn-danger" href="@Url.Action("Delete", "Product", new { id = product.Id })">Delete</a>

@@ -21,10 +21,6 @@ namespace Shop_P41.Controllers
         [HttpPost]
         public async Task<IActionResult> Insert(ProductImage productImage)
         {
-            Console.WriteLine($"ProductImage:\n" +
-                $"Id: {productImage.Id}\n" +
-                $"ImageUrl: {productImage.ImageUrl}\n" +
-                $"ProductId: {productImage.ProductId}");
             if (ModelState.IsValid)
             {
                 await _imageService.InsertImageAsync(productImage);

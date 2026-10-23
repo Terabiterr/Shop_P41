@@ -1,0 +1,12 @@
+﻿*, html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.ProductIdImage {
+    font-size: 27px;
+    margin: 10px;
+    font-family: 'Sans Serif Collection';
+    background-color: cornflowerblue;
+    color: white;
+}

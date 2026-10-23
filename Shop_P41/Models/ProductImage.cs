@@ -14,7 +14,7 @@ public class ProductImage
     public int ProductId { get; set; }
 
     [ForeignKey(nameof(ProductId))]
-    public Product Product { get; set; } = null!;
+    public Product? Product { get; set; } = null!;
 
     /*
      Додати зображення до бази даних, та вивести товари через контроллер Product

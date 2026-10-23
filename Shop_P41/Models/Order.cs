@@ -16,7 +16,7 @@ public class Order
     public string UserId { get; set; } = null!;
 
     [ForeignKey(nameof(UserId))]
-    public User User { get; set; } = null!;
+    public User? User { get; set; } = null!;
 
-    public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
+    public ICollection<OrderItem>? Items { get; set; } = new List<OrderItem>();
 }
