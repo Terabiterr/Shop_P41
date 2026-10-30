@@ -56,6 +56,8 @@ namespace Shop_P41
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapControllers();
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Product}/{action=Index}/{id?}");

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 public class ProductImage
 {
@@ -13,6 +14,7 @@ public class ProductImage
     [Required]
     public int ProductId { get; set; }
 
+    [JsonIgnore]
     [ForeignKey(nameof(ProductId))]
     public Product? Product { get; set; } = null!;
 
