@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Shop_P41.Controllers.API
 {
@@ -12,11 +11,37 @@ namespace Shop_P41.Controllers.API
         {
             _productService = productService;
         }
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _productService.CreateAsync(product);
+                return Ok(Json(result));
+            }
+            return BadRequest(new { error = "Parsing model ..." });
+        }
         [HttpGet]
         public async Task<IActionResult> Read()
         {
             var products = await _productService.GetProductsAsync();
             return Ok(Json(products));
-        }  
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Edit(int id, [FromBody] Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _productService.UpdateAsync(id, product);
+                return Ok(Json(result));
+            }
+            return BadRequest("Error ModelState!");
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            var result = await _productService.DeleteAsync(id);
+            return Ok(Json(result));
+        }
     }
 }
