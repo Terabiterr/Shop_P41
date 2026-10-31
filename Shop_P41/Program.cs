@@ -1,6 +1,10 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Shop_P41.Services;
+using System.Security.Claims;
+using System.Text;
 
 
 namespace Shop_P41
@@ -44,6 +48,38 @@ namespace Shop_P41
 
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/Denied";
+            });
+
+            // =========================
+            // AUTHENTICATION (JWT)
+            // =========================
+            builder.Services.AddAuthentication()
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+
+                        ValidIssuer = "http://localhost:5089",
+                        ValidAudience = "http://localhost:5089",
+                        IssuerSigningKey = new SymmetricSecurityKey(
+    Encoding.UTF8.GetBytes("A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6")),
+
+                        RoleClaimType = ClaimTypes.Role
+                    };
+                });
+
+            // =========================
+            // AUTHORIZATION POLICY FOR API
+            // =========================
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ApiPolicy", policy =>
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                          .RequireAuthenticatedUser());
             });
 
             builder.Services.AddControllersWithViews();

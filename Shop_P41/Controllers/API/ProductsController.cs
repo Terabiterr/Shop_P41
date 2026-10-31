@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Shop_P41.Controllers.API
 {
@@ -21,6 +23,8 @@ namespace Shop_P41.Controllers.API
             }
             return BadRequest(new { error = "Parsing model ..." });
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  // Авторизация с использованием схемы JWT Bearer
+        [Authorize(Roles = "admin,moderator")]
         [HttpGet]
         public async Task<IActionResult> Read()
         {
