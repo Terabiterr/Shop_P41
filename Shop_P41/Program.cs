@@ -63,10 +63,10 @@ namespace Shop_P41
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
 
-                        ValidIssuer = "http://localhost:5089",
-                        ValidAudience = "http://localhost:5089",
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(
-    Encoding.UTF8.GetBytes("A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6")),
+    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
 
                         RoleClaimType = ClaimTypes.Role
                     };

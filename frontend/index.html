@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настільні Ігри — Магазин</title>
+    <style>
+        /* Базові налаштування */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Навігація */
+        header {
+            background-color: #1a252f;
+            color: #fff;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #f39c12;
+            text-decoration: none;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #f39c12;
+        }
+
+        /* Головний банер / Геро-секція */
+        .hero {
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            color: white;
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #bdc3c7;
+        }
+
+        /* Контент каталогу */
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #f39c12;
+        }
+
+        /* Адаптивна сітка для товарів, куди будуть вставлятися картки з API */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Стиль картки товару (Сюди ваш JS буде рендерити дані) */
+        .product-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #eef0f2;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Обертка для фото */
+        .product-image-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 100%; /* Квадратне співвідношення сторін 1:1 */
+            background-color: #fafafa;
+        }
+
+        .product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Контент картки */
+        .product-details {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+        }
+
+        .product-desc {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+            flex: 1; /* Виштовхує ціну та кнопку до низу, якщо опис короткий */
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Обмеження опису до 3 рядків */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .product-stock {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .product-stock.out {
+            color: #e74c3c;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        /* Кнопка дії */
+        .btn-add-to-cart {
+            display: block;
+            width: 100%;
+            background-color: #f39c12;
+            color: #fff;
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-add-to-cart:hover {
+            background-color: #d35400;
+        }
+
+        /* Підвал */
+        footer {
+            background-color: #1a252f;
+            color: #7f8c8d;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">🎲 Настільний Світ</a>
+            <nav>
+                <a href="#">Каталог</a>
+                <a href="#">Про нас</a>
+                <a href="#">Кошик</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Ласкаво просимо до нашого магазину!</h1>
+        <p>Знайдіть свою ідеальну настільну гру серед сотень хітів</p>
+    </section>
+
+    <main class="container">
+        <h2 class="section-title">Всі товари</h2>
+        <!--
+        Завантажити продукти через AJAX на фронтенд.
+        -->
+        <!-- Сюди ваш скрипт буде додавати картки (innerHTML або append) -->
+        <div class="products-grid" id="products-container">
+            
+            <!-- Приклад ОДНІЄЇ картки на основі структури вашого JSON (Catan) -->
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <!-- Беремо перше зображення з масиву productImages: productImages[0].imageUrl -->
+                    <img src="1.jpeg" alt="Catan" class="product-image">
+                </div>
+                <div class="product-details">
+                    <a href="#" class="product-name">Catan</a>
+                    <p class="product-desc">Популярна стратегічна настільна гра про колонізацію острова.</p>
+                    
+                    <div class="product-meta">
+                        <!-- Кількість (quantity) -->
+                        <span class="product-stock">В наявності: 25 шт.</span>
+                    </div>
+
+                    <div class="product-meta">
+                        <!-- Ціна (price) -->
+                        <span class="product-price">1 799.99 грн</span>
+                    </div>
+                    
+                    <button class="btn-add-to-cart">Купити</button>
+                </div>
+            </div>
+            <!-- Кінець прикладу картки -->
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Магазин настільних ігор. Всі права захищені.</p>
+    </footer>
+
+</body>
+</html>

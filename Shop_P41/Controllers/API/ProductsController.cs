@@ -24,7 +24,7 @@ namespace Shop_P41.Controllers.API
             return BadRequest(new { error = "Parsing model ..." });
         }
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  // Авторизация с использованием схемы JWT Bearer
-        [Authorize(Roles = "admin,moderator")]
+        [Authorize(Roles = "admin, Moderator")]
         [HttpGet]
         public async Task<IActionResult> Read()
         {

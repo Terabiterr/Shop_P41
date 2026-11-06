@@ -16,11 +16,13 @@ namespace Shop_P41.Controllers.API
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
+        private readonly IConfiguration _configuration;
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _configuration = configuration;
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] ModelLogin modelLogin)
@@ -66,12 +68,12 @@ namespace Shop_P41.Controllers.API
             {
                 auth_claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            string my_token_password = "A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6";
+            string my_token_password = _configuration["Jwt:Key"];
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(my_token_password));
             var token = new JwtSecurityToken(
-                issuer: "http://localhost:5089",
-                audience: "http://localhost:5089",
-                expires: DateTime.UtcNow.AddMinutes(10),
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                expires: DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:DurationInMinutes"])),
                 claims: auth_claims,
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
                 );
