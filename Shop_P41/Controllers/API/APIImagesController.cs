@@ -6,12 +6,12 @@ namespace Shop_P41.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ImagesController : Controller
+    public class APIImagesController : Controller
     {
         //Реалізувати контролер з CRUD операціями
         //Протестувати контролер через Postman або Swagger
         private readonly IImageService _imageService;
-        public ImagesController(IImageService imageService)
+        public APIImagesController(IImageService imageService)
         {
             _imageService = imageService;
         }

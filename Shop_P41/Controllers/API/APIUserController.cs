@@ -11,13 +11,13 @@ namespace Shop_P41.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : Controller
+    public class APIUserController : Controller
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public APIUserController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;

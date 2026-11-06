@@ -1,13 +1,14 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Shop_P41.Services;
 using System.Security.Claims;
 using System.Text;
 
 
-namespace Shop_P41
+
+namespace Shop_p412
 {
     public class Program
     {
@@ -15,10 +16,10 @@ namespace Shop_P41
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDbContext<ShopContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
             builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IImageService, ImageService>();
             // =========================
             // IDENTITY (COOKIE AUTH)
             // =========================
@@ -51,26 +52,39 @@ namespace Shop_P41
             });
 
             // =========================
-            // AUTHENTICATION (JWT)
+            // AUTHENTICATION (COOKIE + JWT)
             // =========================
-            builder.Services.AddAuthentication()
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme =
+                    IdentityConstants.ApplicationScheme;
+
+                options.DefaultChallengeScheme =
+                    IdentityConstants.ApplicationScheme;
+
+                options.DefaultSignInScheme =
+                    IdentityConstants.ExternalScheme;
+
+            })
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
 
-                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                        ValidAudience = builder.Configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(
-    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
 
-                        RoleClaimType = ClaimTypes.Role
-                    };
-                });
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+
+                    RoleClaimType = ClaimTypes.Role
+                };
+            });
 
             // =========================
             // AUTHORIZATION POLICY FOR API
@@ -82,24 +96,50 @@ namespace Shop_P41
                           .RequireAuthenticatedUser());
             });
 
+            // =========================
+            // CORS
+            // =========================
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             builder.Services.AddControllersWithViews();
+            builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 
             var app = builder.Build();
 
-            app.UseRouting();
+            // =========================
+            // MIDDLEWARE
+            // =========================
             app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseCors("AllowAll");
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllers();
+            app.MapControllers(); // API
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Product}/{action=Index}/{id?}");
 
-
             app.Run();
+
+
         }
     }
 }
