@@ -53,7 +53,7 @@ async function add_products(products) {
   products.forEach(product => {
     const card = `
       <section class="card" style="max-width: 320px">
-      <img src="./img/${product.productImages.length > 0 ? product.productImages[0].imageUrl : "default.jpg"}" class="card-img-top" alt="...">
+      <img src="./img/${product.productImages.length > 0 ? product.productImages[0].imageUrl : "default.png"}" class="card-img-top" alt="...">
       <div class="card-body">
         <h4 class="card-title">${product.name}</h4>
         <p class="card-text">${product.description}</p>
