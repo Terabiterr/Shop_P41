@@ -23,15 +23,6 @@ async function get_token() {
     }
 }
 
-// Головна асинхронна функція для запуску коду
-async function main() {
-    const token = await get_token()
-    await get_products(token)
-    console.log(token);
-}
-
-main();
-
 async function get_products(token) {
   try {
     const response = await fetch(
@@ -50,8 +41,7 @@ async function get_products(token) {
     }
 
     const data = await response.json();
-    console.log(data);
-    return data; // Зазвичай дані повертають, щоб використовувати далі в коді
+    return data.value; // Зазвичай дані повертають, щоб використовувати далі в коді
 
   } catch (error) {
     console.error('Помилка запиту:', error);
@@ -59,16 +49,30 @@ async function get_products(token) {
 }
 
 async function add_products(products) {
+  const div_products = document.getElementById("products")
   products.forEach(product => {
     const card = `
       <section class="card" style="max-width: 320px">
-      <img src="./img/${product.productImages[0].imageUrl}" class="card-img-top" alt="...">
+      <img src="./img/${product.productImages.length > 0 ? product.productImages[0].imageUrl : "default.jpg"}" class="card-img-top" alt="...">
       <div class="card-body">
-        <h4 class="card-title">${name}</h4>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-        <a href="#" class="btn-solid theme-primary">Go somewhere</a>
+        <h4 class="card-title">${product.name}</h4>
+        <p class="card-text">${product.description}</p>
+        <p class="card-text">${product.price}</p>
+        <p class="card-text">${product.quantity}</p>
+        <a href="#" class="btn-solid theme-success">Buy</a>
       </div>
     </section>
     `
+    div_products.innerHTML += card
   });
 }
+
+// Головна асинхронна функція для запуску коду
+async function main() {
+    const token = await get_token()
+    const products = await get_products(token)
+    console.log(products)
+    await add_products(products)
+}
+
+main();
