@@ -57,3 +57,18 @@ async function get_products(token) {
     console.error('Помилка запиту:', error);
   }
 }
+
+async function add_products(products) {
+  products.forEach(product => {
+    const card = `
+      <section class="card" style="max-width: 320px">
+      <img src="./img/${product.productImages[0].imageUrl}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h4 class="card-title">${name}</h4>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+        <a href="#" class="btn-solid theme-primary">Go somewhere</a>
+      </div>
+    </section>
+    `
+  });
+}
