@@ -1,3 +1,5 @@
+import { getUserDataFromToken } from './decoder_token';
+
 const server_url = `http://localhost:5089/`;
 
 // Очистили функцію від суміші async та .then(), зробивши її повністю на async/await
@@ -73,6 +75,8 @@ async function main() {
     const products = await get_products(token)
     console.log(products)
     await add_products(products)
+    const user = getUserDataFromToken()
+    console.log(user)
 }
 
 main();
